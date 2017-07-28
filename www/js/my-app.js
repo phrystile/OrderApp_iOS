@@ -331,7 +331,7 @@ myApp.onPageInit('confirmOrder' , function(page) {
 		});
 	});
 
-	$$('.btnOrderConfirmed').on('click', function() {
+	$$('#btnOrderConfirmed').on('click', function() {
 		for (var i = 0 ; i < currentOrder.contacts.length ; i++) {
 			currentOrder.contacts[i].contact_id.preferredMethod = [];
 			for (var j = 0 ; j < $$('[data-id="' + currentOrder.contacts[i].contact_id._id + '"]').length ; j++ ) {
