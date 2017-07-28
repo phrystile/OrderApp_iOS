@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <title>OrderApp</title>
+        <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
+        <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
+        <link rel="stylesheet" href="css/framework7-icons.css">	
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css" />
+    </head>
+    <body class="layout-dark theme-green">
+	    <div class="statusbar-overlay"></div>
+	    <div class="panel-overlay"></div>
+        <!--SIDE PANEL-->
+        <div class="panel panel-left panel-reveal" >
+            <div class="row no-gutter userBg" >
+                <div class="col-100">
+                    <div class="content-block" >
+                        <div class="sidepaneldiv"></div>
+                        <!--NAVBAR-->
+                        <div class="list-block" style="margin: 0; font-size: 15px;">
+                            <ul>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <i class="fa fa-paint-brush fa-2x"></i>
+                                        <a herf="#" class="link" onclick="toggleTheme()">Light/Dark Theme</a>
+                                    </div>
+                                </li>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <i class="fa fa-user fa-2x"></i>
+                                        <a href="#" class="link" onclick="viewContacts()">View Contacts</a>
+                                    </div>
+                                </li>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <i class="fa fa-user-plus fa-2x"></i>
+                                        <a href="#" class="link" data-template="newContact">Add Contact</a>
+                                    </div>
+                                </li>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <i class="f7-icons">cloud_download_fill</i>
+                                        <a href="#" class="link" onclick="loadContacts()">Import Contacts</a>
+                                    </div>
+                                </li>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <label class="label-switch">
+                                            <input type="checkbox" id="showCompletedOrders" {{showCompletedOrders this}} >
+                                            <div class="checkbox"></div>
+                                        </label>
+                                        <a href="#" class="link">Show Completed</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--MAIN VIEW SPACE-->
+        <div class="views">
+            <div class="view view-main">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="center">OrderApp</div>
+                    </div>
+                </div>
+                <div class="pages navbar-through"> 
+                    <div data-page="index" class="page">
+                        <div class="page-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--LOGIN SCREEN-->
+        <div class="login-screen">
+            <div class="view">
+                <div class="page">
+                    <div class="page-content login-screen-content">
+                        <div class="login-screen-title">Login</div>
+                        <form id="frmSignIn">
+                            <div class="list-block">
+                                <ul>
+                                    <li class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title label"><i class="f7-icons">person</i></div>
+                                            <div class="item-input">
+                                                <input type="email" name="email" id="email" required placeholder="Your Email" value="">
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title label"><u class="f7-icons">lock_fill</u></div>
+                                            <div class="item-input">
+                                                <input type="password" name="password" id="password" required placeholder="Your password" value="">
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-block">
+                                <ul>
+                                    <li><a href="#" class="item-link list-button btnSignIn">Sign In</a></li>
+                                    <li><a href="#" class="item-link list-button btnSignUp">Sign Up</a></li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--TEMPLATES-->
+        <!--SIDEPANEL TEMPLATE-->
+        <script type="text/template7" id="sidepanelTemplate">
+            {{#if this.name}}
+                <div class="row">
+                    <div class="col-50" style="text-align:left">
+                        <a href="#">
+                            <img class="roundguy" src="img/defaultProfile.jpg" />
+                        </a>
+                    </div>
+                    <div class="col-50" style="text-align:right">
+                        <a href="#" onclick="logout()"><i title="Logout" alt="Logout" class="f7-icons">logout</i></a>
+                    </div>
+                </div>
+                <h2>{{name.firstname}} {{name.lastname}}</h2>
+                <h3> {{email}}</h3>
+            {{/if}}
+        </script>
+        <!--SIGNUP TEMPLATE-->
+        <script type="text/template7" id="signUp">
+            <div class="view">
+                <div class="page">
+                    <div class="page-content ">
+                        <div class="">Sign Up</div>
+                        <div class="list-block">
+                            <ul>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title label"><i class="f7-icons">person</i></div>
+                                        <div class="item-input">
+                                            <input type="text" name="email" id="signupemail" placeholder="Your Email" value="">
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title label"><u class="f7-icons">lock_fill</u></div>
+                                        <div class="item-input">
+                                            <input type="password" name="password" id="signuppassword" placeholder="Your password" value="">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="list-block">
+                            <ul>
+                                <li><a href="#" class="item-link list-button btnTrySignUp">Sign Up</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--ORDERS TEMPLATE-->
+        <script type="text/template7" id="orders">
+            <div class="view"> 
+                <div class="navbar">
+                    <div class="navbar-inner" >
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">Orders</div>
+                        <div class="right">
+                            <!--<a href="#" class="link" onclick="LoadTest()">
+                                Test
+                            </a>-->
+                            <a href="#" class="link" data-item="{{@index}}" data-template="newOrder"> 
+                                New
+                            </a>
+                        </div>
+                    </div>
+                </div> 
+                <div class="page" data-page="orders">
+                    <div class="page-content pull-to-refresh-content" data-ptr-distance="55">
+                        <div class="pull-to-refresh-layer">
+                            <div class="preloader"></div>
+                            <div class="pull-to-refresh-arrow"></div>
+                        </div>
+                        {{#if this.orders}}
+                            <div class="list-block cards-list">
+                                <ul style="background-color: rgba(255, 255, 255, 0);">
+                                    {{#each this.orders}}
+                                        <li class="swipeout card btnOrderDetail" data-id="{{_id}}" data-context="{{stringify this}}">
+                                            <div class="swipeout-content">
+                                                <div class="card-header {{#if isCompleted}} orderCompleted {{/if}}" >
+                                                    <strong>{{location}} </strong>
+                                                </div>
+                                                <div class="card-content ">
+                                                    <div class="card-content-inner">
+                                                        {{shortFormat timeGoing}}
+                                                        <br/><hr noshade>
+                                                        <div class="list-block media-list"> 
+                                                            <ul style="padding-left:0px;">
+                                                                {{#each this.orderEntry}}
+                                                                    <li>
+                                                                        <label class="label-checkbox item-content">
+                                                                            <input type="checkbox" 
+                                                                            name="contact{{@index}}" 
+                                                                            class="notifyContact" 
+                                                                            id="contact{{contactId}}" 
+                                                                            data-contact="{{stringify this}}"
+                                                                            data-orderId="{{../_id}}" 
+                                                                            data-where="{{../location}}"
+                                                                            data-when="{{../timeGoing}}"
+                                                                            />
+                                                                            <div class="item-media notifyCheckboxes forId_{{../_id}}" style="display:none">
+                                                                                <i class="icon icon-form-checkbox"></i>
+                                                                            </div>
+                                                                            <div class="item-inner">
+                                                                                <div class="item-title-row">
+                                                                                    <div class="item-title">
+                                                                                        {{#if this.contactDetail}} {{this.contactDetail.contact_id.name.firstname}} {{this.contactDetail.contact_id.name.lastname}}{{/if}} 
+                                                                                        <small>(sent {{orderwhenPast dtCreated}})</small>
+                                                                                    </div>
+                                                                                    <div class="item-after">
+                                                                                        <!--<span class="badge hide">{{subtotal}}</span>-->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="item-subtitle">
+                                                                                    {{contactOrder}}	
+                                                                                </div>
+                                                                            </div>
+                                                                        </label>
+                                                                    </li>
+                                                                {{else}}
+                                                                    <li style="text-align: center">
+                                                                        <div class="content-block-title">
+                                                                            You didn't add any contacts!<br><br>
+                                                                        </div>
+                                                                    </li>
+                                                                {{/each}}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <a href="#" class=" showReNotify {{#if isCompleted}}disabled{{/if}}" data-id="{{this._id}}" data-show="reNotify">
+                                                        <i class="f7-icons  reNotify forId_{{this._id}} " data-id="{{this._id}}">email_fill</i>
+                                                        <i class="f7-icons cancelReNotify forId_{{this._id}} color-red" data-id="{{this._id}}" style="display:none;">close_round_fill</i> 
+                                                    </a>
+                                                    <a href="#" class=" sendableReNotify forId_{{this._id}}" style="display:none" 
+                                                    data-id="{{this._id}}" 
+                                                    data-where="{{this.location}}" 
+                                                    data-when="{{timeGoing}}">
+                                                        <i class="f7-icons color-green">play_round_fill</i>
+                                                    </a>	
+                                                    <a href="#" class="{{#if isCompleted}}disabled{{/if}} addContacts" data-context="{{stringify this}}"><i class="fa fa-user-plus fa-2x"></i></a>		
+                                                </div>
+                                            </div>	
+                                            {{#if isCompleted}}
+                                            {{else}}
+                                                <div class="swipeout-actions-left">
+                                                    <a href="#" class="btnOrderComplete bg-green" data-id="{{this._id}}">Mark Complete</a>
+                                                </div>
+                                            {{/if}}
+                                            <div class="swipeout-actions-right">
+                                                <a href="#" class="btnOrderDelete swipeout-delete bg-red" data-id="{{this._id}}">Delete</a>
+                                            </div>
+                                        </li>
+                                    {{/each}}
+                                </ul>
+                            </div>
+                            <div style="height:50px;"></div>
+                        {{/if}}
+                        {{#unless this.orders.length}}
+                            <div class="content-block">
+                                <div class="row">
+                                    <div class="col-100" style="text-align: center">
+                                        <img src="img/forkknife.png">
+                                        <h1 style="color: #000000;">No Orders.</h1>
+                                    </div>
+                                </div>
+                            </div>	
+                        {{/unless}}
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--NEW ORDER TEMPLATE-->
+        <script type="text/template7" id="newOrder">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner">
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">New Order</div>
+                        <div class="right">
+                        </div>
+                    </div>
+                </div> 
+                <div class="page" data-page="newOrder">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="page-content">                
+                        <div class="content-block">
+                            <div class="list-block">
+                                <ul>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="item-input">
+                                                    <input type="text" id="location"
+                                                    placeholder="Where?"
+                                                    autocorrect="off" autocapitalize="on">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="item-content">
+                                            <div class="item-inner">
+                                                <div class="row">
+                                                    <div class="col-auto   " style="text-align: -webkit-center">
+                                                        <input id="picker-input" type="text" placeholder="When?" />
+                                                    </div>
+                                                    <div class="col-auto" style="text-align: -webkit-right">
+                                                        <a href="#" class="button" onclick="pickerValNow()">Going Now</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-block">
+                                <ul>
+                                    <li style="padding: 5px;">
+                                        <a href="#" id="btnSelectContacts" class="button button-big button-fill">
+                                            Next&nbsp;
+                                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--ORDER DETAIL TEMPLATE-->
+        <script type="text/template7" id="orderDetail">
+            <div class="view">
+                <div class="page navbar-fixed" data-page="newOrder">  
+                    <div class="navbar">
+                        <div class="navbar-inner" data-page="newOrder">
+                            <div class="left">
+                                <a href="#" class="back link"><i class="f7-icons">left_arrow</i></a>
+                            </div>
+                            <div>{{currentOrder.location}}</div>
+                        </div>
+                    </div>   
+                    <div class="page-content">
+                        <div class="content-block-title">Notified</div>
+                        <div class="list-block media-list">
+                            <ul>
+                                {{#each currentOrder.orderEntry}}
+                                <li>
+                                    <a href="#" class=" item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">{{contactDetail.contact_id.name.firstname}} {{contactDetail.contact_id.name.lastname}}</div>
+                                                <div class="item-after"></div>
+                                            </div>
+                                            <div class="item-subtitle">{{contact_id.contactOrder}}</div>
+                                            <div class="item-text">{{orderwhen contact_id.lastNotified}}</div>
+                                        </div>
+                                    </a>
+                                </li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--NEW CONTACT TEMPLATE-->
+        <script type="text/template7" id="newContact">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner" data-page="newContact">
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">Contacts</div>
+                        <div class="right"><a href="#" id="btnImportContacts" class="link"><small>Import</small></a></div>
+                    </div>
+                </div>
+                <div class="page" data-page="newContact">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-user-plus fa-2x" aria-hidden="true"></i>
+                                <strong>New Contact</strong>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <div class="list-block">
+                                        <ul>
+                                            <li>
+                                                <div class="item-content">
+                                                    <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                                    <div class="item-inner">
+                                                        <div class="item-input">
+                                                            <input type="text" placeholder="First Name" id="newContact_FirstName">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="item-content">
+                                                    <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                                    <div class="item-inner">
+                                                        <div class="item-input">
+                                                            <input type="text" placeholder="Last Name" id="newContact_LastName">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div class="item-content">
+                                                    <div class="item-media"><i class="icon f7-icons">email</i></div>
+                                                    <div class="item-inner">
+                                                        <div class="item-input">
+                                                            <input type="email" placeholder="E-mail" id="newContact_Email">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>	
+                                            <li>
+                                                <div class="item-content">
+                                                    <div class="item-media"><i class="icon f7-icons">phone</i></div>
+                                                    <div class="item-inner">
+                                                        <div class="item-input">
+                                                            <input type="tel" placeholder="Phone" id="newContact_Phone">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-block">
+                            <div class="list-block">
+                                <ul>
+                                    <li style="padding: 5px;">
+                                        <a href="#" class="button button-big button-fill btnNewContact">Save</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--IMPORT CONTACT TEMPLATE-->
+        <script type="text/template7" id="importContact">
+            <div class="view"> 
+                <div class="navbar">
+                    <div class="navbar-inner" data-page="importContact">
+                        <div class="left">
+                            <a href="#" class="back link" ><i class="icon icon-back"></i>   </a>
+                        </div>
+                        <div class="center">OrderApp</div>
+                        <div class="right"><a href="#" class="link" id="btnImportSelectedContacts"><i class="f7-icons color-green">check_round_fill</i></a></div>
+                    </div>
+                </div> 
+                <div class="page" data-page="importContact">  
+                    <div class="page-content">
+                        <div class="content-block-title">Manage Contacts</div>
+                        <div class="list-block">
+                            <ul>
+                                {{#each contacts}}
+                                <li>
+                                    <label class="label-checkbox item-content">
+                                        <!-- Checked by default -->
+                                        <input type="checkbox" name="contact_{{id}}" class="selectedContact" data-contact="{{stringify this}}" value="{{id}}">
+                                        <div class="item-media">
+                                            <i class="icon icon-form-checkbox"></i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title">{{name.formatted}} ({{displayName}})
+                                            <br/>{{#each emails}} {{#if @first}} {{value}} {{/if}} {{/each}}
+                                            </div>
+                                        </div>
+                                    </label>
+                                </li> 
+                                {{/each}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--VIEW CONTACTS TEMPLATE-->
+        <script type="text/template7" id="viewContacts">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner" >
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">Contacts</div>
+                        <div class="right">
+                            <a href="#" class="link" data-item="{{@index}}" data-template="newContact"> 
+                                New
+                            </a>
+                        </div>
+                    </div>
+                </div> 
+                <div class="page" data-page="viewContacts">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="content-block">
+                            {{#unless this.contacts.length}}
+                                <div class="content-block">
+                                    <div class="row">
+                                        <div class="col-100" style="text-align: center">
+                                            <h2>No Contacts. <br/>Click the 
+                                            <a href="#" class="link" data-context="{{stringify this}}" data-template="newContact">
+                                                <i class="f7-icons color-blue">add_fill</i>
+                                            </a> 
+                                            to get started..</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/unless}}
+                            {{#if this.contacts.length}}
+                                <div class="list-block">
+                                    <ul>
+                                        {{#each this.contacts}}
+                                            <li class="swipeout">
+                                                <div class="swipeout-content">
+                                                    <label class="label-checkbox item-content">
+                                                        <div class="item-inner">
+                                                	        <div class="item-title">
+                                              	                {{mobileBadge contact_id}}
+    															{{this.contact_id.name.firstname}} {{this.contact_id.name.lastname}}
+                                                                {{#if this.contact_id.email}}
+                                                                    <br/><small><i class="fa fa-envelope"></i>&nbsp;{{this.contact_id.email}}</small>
+                                                                {{/if}}
+                                                                {{#if this.contact_id.phone}}
+                                                                    <br/><small><i class="fa fa-phone"></i>&nbsp;{{this.contact_id.phone}}</small>
+                                                                {{/if}}  
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="swipeout-actions-left">
+                                                    <a href="#" class="btnContactEdit swipeout bg-green" data-id="{{this.contact_id._id}}">Edit</a>
+                                                </div>
+                                                <div class="swipeout-actions-right">
+                                                    <a href="#" class="btnContactDelete swipeout-delete bg-red" data-id="{{this.contact_id._id}}">Delete</a>
+                                                </div>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--ORDER CONTACTS TEMPLATE-->
+        <script type="text/template7" id="orderContacts">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner" >
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">Invite</div>
+                        <div class="right">                    
+                        </div>
+                    </div>
+                </div> 
+                <div class="page" data-page="orderContacts">  
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="content-block">
+                            <div class="list-block">
+                                <ul>
+                                    <li style="padding: 5px;">
+                                        <a href="#" class="button button-big button-fill" data-context="{{stringify this}}"
+                                            data-template="newContact"><i class="fa fa-user-plus" aria-hidden="true"></i>&nbsp;New Contact
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            {{#unless this.contacts.length}}
+                                <div class="content-block">
+                                    <div class="row">
+                                        <div class="col-100" style="text-align: center">
+                                            <h2>No Contacts. <br/>Click the 
+                                            <a href="#" class="link" data-context="{{stringify this}}" data-template="newContact">
+                                                <i class="f7-icons color-blue">add_fill</i>
+                                            </a> 
+                                            to get started..</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            {{/unless}}
+                            {{#if this.contacts.length}}
+                                <div class="list-block">
+                                    <ul>
+                                        {{#each this.contacts}}
+                                            <li class="swipeout">
+                                                <div class="swipeout-content">
+                                                    <label class="label-checkbox item-content">
+                                                        <input type="checkbox" name="contact{{@index}}" class="notifyContact" id="contact{{contact_id._id}}" data-contact="{{stringify this}}" />
+                                                        <div class="item-media">
+                                                            <i class="icon icon-form-checkbox"></i>
+                                                        </div>
+                                                        <div class="item-inner">
+                                                	        <div class="item-title">
+                                              	                {{mobileBadge contact_id}}
+    															{{this.contact_id.name.firstname}} {{this.contact_id.name.lastname}}
+                                                                {{#if this.contact_id.email}}
+                                                                    <br/><small><i class="fa fa-envelope"></i>&nbsp;{{this.contact_id.email}}</small>
+                                                                {{/if}}
+                                                                {{#if this.contact_id.phone}}
+                                                                    <br/><small><i class="fa fa-phone"></i>&nbsp;{{this.contact_id.phone}}</small>
+                                                                {{/if}}  
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="swipeout-actions-right">
+                                                    <a href="#" class="btnContactDelete swipeout-delete bg-red" data-id="{{this.contact_id._id}}">Delete</a>
+                                                </div>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                            {{/if}}
+                            <div id="dvConfirmOrder" class="list-block" style="visibility: hidden;">
+                                <ul>
+                                    <li style="padding: 5px;">
+                                        <a href="#" id="btnConfirmOrder" class="button button-big button-fill" data-orderid="{{_id}}">
+                                            Next&nbsp;
+                                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--CONFIRM ORDER TEMPLATE-->
+        <script type="text/template7" id="confirmOrder">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner" data-page="confirmOrder">
+                        <div class="left">
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
+                        </div>
+                        <div class="center">Review</div>
+                    </div>
+                </div> 
+                <div class="page" data-page="confirmOrder">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
+                    <div class="page-content">
+                        <div class="content-block">
+                            <div class="list-block">                       
+                                <ul>
+                                    <li class="item-content">
+                                        <div class="item-media"><i class="fa fa-map-marker" aria-hidden="true"></i></div>
+                                        <div class="item-inner">{{currentOrder.location}}</div>
+                                    </li>
+                                    <li class="item-content">
+                                        <div class="item-media"><i class="fa fa-clock-o" aria-hidden="true"></i></div>
+                                        <div class="item-inner">{{formatnice currentOrder.timeGoing}}</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="list-block">                                
+                                <ul>
+                                    <li class="item-content">
+                                        <div class="item-media"><i class="fa fa-envelope" aria-hidden="true"></i></div>
+                                        <div class="item-inner"><strong>Inviting</strong></div>
+                                    </li>
+                                    {{#each currentOrder.contacts}}
+                                        {{#if contact_id.new}}
+                                            <li class="item-content" data-contact="{{stringify this}}">
+                                                <div class="item-inner">
+                                                    {{#if contact_id.isUser}}   
+                                                        <div class="item-inner">
+                                                            <div class="item-title">{{contact_id.name.firstname}}&nbsp;{{contact_id.name.lastname}}</div>
+                                                            <div class="item-after">{{mobileBadge this.contact_id}}</div>
+                                                        </div>
+                                                    {{else}}
+                                                        <div class="item-inner">                                                           
+                                                            <div class="item-title">
+                                                                {{contact_id.name.firstname}} {{contact_id.name.lastname}}
+                                                                <br />
+                                                                {{contact_id.email}}
+                                                                <br />
+                                                                {{contact_id.phone}}
+                                                            </div>
+                                                            <div class="col-15">
+                                                                <i class="fa fa-envelope color-blue"></i>
+                                                                <label class="label-switch">
+                                                                    <input type="checkbox" {{#unless contact_id.phone}}checked{{/unless}}  name="contact_email_{{@index}}" class="pref_email" data-id="{{contact_id._id}}" id="contact_pm_email_{{contact_id._id}}" />
+                                                                    <div class="checkbox"></div>
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-15">
+                                                                {{#if contact_id.phone}}
+                                                                    <i class="fa fa-phone color-blue"></i>
+                                                                    <label class="label-switch">
+                                                                        <input type="checkbox" checked name="contact_sms_{{@index}}" class="pref_sms" id="contact_pm_sms_{{contact_id._id}}" data-id="{{contact_id._id}}" />
+                                                                        <div class="checkbox"></div>
+                                                                    </label>
+                                                                {{else}}
+                                                                    <a href="#" id="addphone" data-index="{{@index}}" data-contact="{{stringify this}}"><i class="fa fa-plus-circle fa-2x"></i> &nbsp; Add</a>
+                                                                {{/if}}
+                                                            </div>
+                                                        </div>
+                                                    {{/if}}
+                                                </div>
+                                            </li>
+                                        {{/if}}
+                                    {{/each}}
+                                </ul>
+                            </div>
+                            <div class="list-block">
+                                <ul>
+                                    <li style="padding: 5px;">
+                                        <a href="#" id="btnOrderConfirmed" class="button button-big button-fill">
+                                            Send&nbsp;
+                                            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </script>
+        <!--EXISTING ORDER CONTACTS TEMPLATE-->
+        <script type="text/template7" id="existingOrderContacts">
+            <div class="view"> 
+                <div class="navbar">
+                    <div class="navbar-inner" data-page="existingOrderContacts">
+                        <div class="left">
+                            <a href="#" class="back link" ><i class="icon icon-back"></i>   </a>
+                        </div>
+                        <div class="center">OrderApp</div>
+                    </div>
+                </div>
+                <div class="page" data-page="existingOrderContacts">  
+                    <div class="page-content">
+                        <div class="content-block">
+                            <a class="link" href="#" data-context="{{stringify this}}" data-template="newContact">
+                                <i class="fa fa-user fa-fw" aria-hidden="true"></i>&nbsp; <small>New Contact</small>
+                            </a>
+                            <div class="content-block-title">Who do you want to add?</div>
+                                <div class="list-block">
+                                    <ul>
+                                        {{#each this.contacts}}
+                                            <li class="swipeout">
+                                                <div class="swipeout-content">
+                                                    <label class="label-checkbox item-content">
+                                                        <input type="checkbox" name="contact{{@index}}" class="notifyContact" id="contact{{contact_id._id}}" data-contact="{{stringify this}}" />
+                                                        <div class="item-media">
+                                                            <i class="icon icon-form-checkbox"></i>
+                                                        </div>
+                                                        <div class="item-inner">
+                                                            <div class="item-title">{{this.contact_id.name.firstname}} {{this.contact_id.name.lastname}}
+                                                 	            {{#if this.contact_id.email}}
+																	<br/><small><i class="fa fa-envelope"></i>&nbsp;{{this.contact_id.email}}</small>
+																{{/if}}
+																{{#if this.contact_id.phone}}
+																	<br/><small><i class="fa fa-phone"></i>&nbsp;{{this.contact_id.phone}}</small>
+																{{/if}}
+                                                            </div> 
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                                <div class="swipeout-actions-right">
+                                                    <a href="#" class="btnContactDelete swipeout-delete bg-red" data-id="{{this.contact_id._id}}">Delete</a>
+                                                </div>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </div>
+                                <div class="row">
+                                    <div class="col-auto"></div>
+                                    <div class="col-auto" style="text-align: -webkit-center">
+                                        <a href="#" class="link btnExistingOrderSave paperplane" data-orderid="{{_id}}" style="visibility:hidden; margin-bottom:64px">
+                                            <i class="f7-icons size-50 ">arrow_right_fill</i>
+                                        </a>
+                                    </div>
+                                    <div class="col-auto"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--NOTIFICATION ALERT TEMPLATE-->
+        <script type="text/template7" id="NotificationAlert">
+            <div class="view">
+                <div class="navbar">
+                    <div class="navbar-inner" >
+                        <div class="center ">OrderApp</div>
+                    </div>
+                </div>
+                <div data-page="NotificationAlert" class="page">
+                    <div class="page-content">
+                        <div class="card">
+                            <div class="card-header">
+                                {{currentOrder.userId.name.firstname}} is making a food run, want anything?                                
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header"><strong>{{currentOrder.location}}</strong> {{shortFormat currentOrder.timeGoing}}</div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <div class="row">
+                                        <div class="col-50">
+                                            <a href="#" class="button button-big color-green button-fill" id="btnReplyYes"><i class="fa fa-check"></i> Yes</a>
+                                        </div>                                    
+                                        <div class="col-50">
+                                            <a href="#" class="button button-big color-red button-fill" id="btnReplyNo"><i class="fa fa-times"></i> No</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="notifyreply" style="display: none;">
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-content-inner">
+                                        <input type="text" name="contactOrder" id="txtNotificationReply" placeholder="What do you want?" style="color: grey;" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-content">
+                                    <div class="card-content-inner">
+                                        <a href="#" id="btnAcceptOrder" class="button button-big color-green button-fill data-additionaldata="{{stringify this}}">
+                                            Submit Order
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+        <!--APPLICATION SCRIPTS-->
+        <script type="text/javascript" src="js/moment.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
+        <script type="text/javascript" src="js/my-app.js"></script>
+    </body>
+</html>
