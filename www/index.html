@@ -258,11 +258,11 @@
                                                     </div>
                                                 </div>
                                                 <div class="card-footer">
-                                                    <a href="#" class=" showReNotify {{#if isCompleted}}disabled{{/if}}" data-id="{{this._id}}" data-show="reNotify">
-                                                        <i class="f7-icons  reNotify forId_{{this._id}} " data-id="{{this._id}}">email_fill</i>
+                                                    <a href="#" class="showReNotify {{#if isCompleted}}disabled{{/if}}" data-id="{{this._id}}" data-show="reNotify">
+                                                        <i class="f7-icons reNotify forId_{{this._id}}" data-id="{{this._id}}">email_fill</i>
                                                         <i class="f7-icons cancelReNotify forId_{{this._id}} color-red" data-id="{{this._id}}" style="display:none;">close_round_fill</i> 
                                                     </a>
-                                                    <a href="#" class=" sendableReNotify forId_{{this._id}}" style="display:none" 
+                                                    <a href="#" class="sendableReNotify forId_{{this._id}}" style="display:none" 
                                                     data-id="{{this._id}}" 
                                                     data-where="{{this.location}}" 
                                                     data-when="{{timeGoing}}">
@@ -551,7 +551,11 @@
                             <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
                         </div>
                     </div>
-                    <div class="page-content">
+                    <div class="page-content pull-to-refresh-content" data-ptr-distance="55">
+                        <div class="pull-to-refresh-layer">
+                            <div class="preloader"></div>
+                            <div class="pull-to-refresh-arrow"></div>
+                        </div>
                         <div class="content-block">
                             {{#unless this.contacts.length}}
                                 <div class="content-block">
@@ -798,55 +802,71 @@
                 <div class="navbar">
                     <div class="navbar-inner" data-page="existingOrderContacts">
                         <div class="left">
-                            <a href="#" class="back link" ><i class="icon icon-back"></i>   </a>
+                            <a href="#" class="link icon-only open-panel"><i class="f7-icons">bars</i></a>
                         </div>
-                        <div class="center">OrderApp</div>
+                        <div class="center">Contacts</div>
+                        <div class="right">
+                            <a href="#" class="link" data-item="{{@index}}" data-template="newContact"> 
+                                New
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="page" data-page="existingOrderContacts">  
+                <div class="page" data-page="existingOrderContacts">
+                    <div class="toolbar">
+                        <div class="toolbar-inner">
+                            <a href="#" class="back link"><i class="f7-icons">arrow_left_fill</i></a>
+                            <a href="#" class="link" onclick="goHome();"><i class="f7-icons">home_fill</i></a>
+                        </div>
+                    </div>
                     <div class="page-content">
-                        <div class="content-block">
-                            <a class="link" href="#" data-context="{{stringify this}}" data-template="newContact">
-                                <i class="fa fa-user fa-fw" aria-hidden="true"></i>&nbsp; <small>New Contact</small>
-                            </a>
-                            <div class="content-block-title">Who do you want to add?</div>
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Who would you like to add?</strong>
+                            </div>
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <div class="list-block">
+                                        <ul>
+                                            {{#each this.contacts}}
+                                                <li class="swipeout">
+                                                    <div class="swipeout-content">
+                                                        <label class="label-checkbox item-content">
+                                                            <input type="checkbox" name="contact{{@index}}" class="notifyContact" id="contact{{contact_id._id}}" data-contact="{{stringify this}}" />
+                                                            <div class="item-media">
+                                                                <i class="icon icon-form-checkbox"></i>
+                                                            </div>
+                                                            <div class="item-inner">
+                                                                <div class="item-title">{{this.contact_id.name.firstname}} {{this.contact_id.name.lastname}}
+                                                                    {{#if this.contact_id.email}}
+                                                                        <br/><small><i class="fa fa-envelope"></i>&nbsp;{{this.contact_id.email}}</small>
+                                                                    {{/if}}
+                                                                    {{#if this.contact_id.phone}}
+                                                                        <br/><small><i class="fa fa-phone"></i>&nbsp;{{this.contact_id.phone}}</small>
+                                                                    {{/if}}
+                                                                </div> 
+                                                            </div>
+                                                        </label>
+                                                    </div>
+                                                    <div class="swipeout-actions-right">
+                                                        <a href="#" class="btnContactDelete swipeout-delete bg-red" data-id="{{this.contact_id._id}}">Delete</a>
+                                                    </div>
+                                                </li>
+                                            {{/each}}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer" id="dvExistingOrderSave" style="display: none;">
                                 <div class="list-block">
                                     <ul>
-                                        {{#each this.contacts}}
-                                            <li class="swipeout">
-                                                <div class="swipeout-content">
-                                                    <label class="label-checkbox item-content">
-                                                        <input type="checkbox" name="contact{{@index}}" class="notifyContact" id="contact{{contact_id._id}}" data-contact="{{stringify this}}" />
-                                                        <div class="item-media">
-                                                            <i class="icon icon-form-checkbox"></i>
-                                                        </div>
-                                                        <div class="item-inner">
-                                                            <div class="item-title">{{this.contact_id.name.firstname}} {{this.contact_id.name.lastname}}
-                                                 	            {{#if this.contact_id.email}}
-																	<br/><small><i class="fa fa-envelope"></i>&nbsp;{{this.contact_id.email}}</small>
-																{{/if}}
-																{{#if this.contact_id.phone}}
-																	<br/><small><i class="fa fa-phone"></i>&nbsp;{{this.contact_id.phone}}</small>
-																{{/if}}
-                                                            </div> 
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                                <div class="swipeout-actions-right">
-                                                    <a href="#" class="btnContactDelete swipeout-delete bg-red" data-id="{{this.contact_id._id}}">Delete</a>
-                                                </div>
-                                            </li>
-                                        {{/each}}
+                                        <li style="padding: 5px;">
+                                            <a href="#" id="btnExistingOrderSave" class="button button-big button-fill" data-orderid="{{_id}}">
+                                                Send&nbsp;
+                                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
                                     </ul>
-                                </div>
-                                <div class="row">
-                                    <div class="col-auto"></div>
-                                    <div class="col-auto" style="text-align: -webkit-center">
-                                        <a href="#" class="link btnExistingOrderSave paperplane" data-orderid="{{_id}}" style="visibility:hidden; margin-bottom:64px">
-                                            <i class="f7-icons size-50 ">arrow_right_fill</i>
-                                        </a>
-                                    </div>
-                                    <div class="col-auto"></div>
                                 </div>
                             </div>
                         </div>

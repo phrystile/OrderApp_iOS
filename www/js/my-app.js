@@ -208,7 +208,7 @@ myApp.onPageInit('orders', function (page) {
 
 	$$('.addContacts').on('click', function() {
 		currentOrder = JSON.parse($$(this).data('context'));
-		console.log('addContacts');
+		
 		SyncContacts(false, function() { loadExistingOrderContacts(currentOrder); });
 	});
 
@@ -233,7 +233,7 @@ myApp.onPageInit('orders', function (page) {
 		var thisid = $$(this).data('orderid');
 		if ($$('.notifyContact:checked').length > 0 && $$('.cancelReNotify.forId_' + thisid).css('display') == 'block') {
 			 $$(".sendableReNotify.forId_" + thisid).show();
-		 	console.log('$$(".sendableReNotify.forId_' + thisid + '").hide();');
+		 	console.log('$$(".sendableReNotify.forId_' + thisid + '").show();');
 		} 
 		else { 
 			$$(".sendableReNotify.forId_" + thisid).hide();
@@ -347,10 +347,10 @@ myApp.onPageInit('confirmOrder' , function(page) {
 		var gmtWhen = new moment(currentOrder.timeGoing);
 
 		if (thisPage.fromPage.name != 'existingOrderContacts') {
-			createOrder(userData._id, currentOrder, gmtWhen.utc().format('YYYY-MM-DD H:mm'));		
+			createOrder(userData._id, currentOrder, gmtWhen.utc().format('YYYY-MM-DD H:mm'));
 		}
-
-		loadOrdersPage();
+		
+		getOrdersByUser();
 	});
 });
 
@@ -358,9 +358,16 @@ myApp.onPageInit('confirmOrder' , function(page) {
 myApp.onPageInit('viewContacts', function(page) {
 	thisPage = page;
 
+	var ptrContent = $$('.pull-to-refresh-content');
+	
+	ptrContent.on('refresh', function (e) {
+		SyncContacts(false);
+		viewContacts();
+	});  
+
 	//Setup Delete Button
 	$$('.btnContactDelete').on('click', function() {
-   	 $$.ajax({ type: "DELETE",
+   		$$.ajax({ type: "DELETE",
 			url: 'https://orderapp-api.herokuapp.com/contacts/' + userData._id + '/' + $$(this).data('id'),
 			success : function(res, success, x) { 
 				if (typeof(res) == 'string') res = JSON.parse(res);
@@ -410,7 +417,7 @@ myApp.onPageInit('orderContacts', function(page) {
 			currentOrder.contacts[i].contact_id.new = true; 
 		}
 		
-		loadConfirmOrderPage();	
+		loadConfirmOrderPage();
 	});	
 	
    	$$('.notifyContact').on('change', function() {
@@ -458,10 +465,10 @@ myApp.onPageInit('existingOrderContacts', function(page) {
 		var thisid = $$(this).data('orderid');
 	
 		if ($$('.notifyContact:checked').length > 0 ) {
-			$$('.paperplane').css('visibility','visible');
+			$$('#dvExistingOrderSave').css('display','block');
 		} 
 		else {
-			$$('.paperplane').css('visibility','hidden');
+			$$('#dvExistingOrderSave').css('display','none');
 		}
 	});
 });
@@ -1158,9 +1165,9 @@ function sendNotification(data) {
 	);	
 }
 
-/*function Notify(order, contact, type) { 
+function Notify(order, contact, type) { 
 	var p = new _notify(order,contact,type);
-}*/
+}
 
 //Display Notification
 function LoadNotificationPage(d) {
