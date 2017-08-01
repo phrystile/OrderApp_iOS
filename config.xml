@@ -52,7 +52,7 @@
     <plugin name="cordova-plugin-whitelist" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" spec="~1.0.1" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="phonegap-plugin-push" spec="~2.0">
+    <plugin name="phonegap-plugin-push" spec="1.10.5">
         <variable name="SENDER_ID" value="1074585851527" />
     </plugin>
     <plugin name="cordova-plugin-contacts" spec="~2.3.0" />
