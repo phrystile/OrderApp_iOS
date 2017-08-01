@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="css/framework7-icons.css">	
         <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="lib/font-awesome-4.5.0/css/font-awesome.min.css" />
+        <link href='https://fonts.googleapis.com/css?family=Sacramento' rel='stylesheet'>
     </head>
     <body class="layout-dark theme-green">
 	    <div class="statusbar-overlay"></div>
@@ -85,39 +86,62 @@
             <div class="view">
                 <div class="page">
                     <div class="page-content login-screen-content">
-                        <div class="row">
-                            <div class="col-80">
-                                <img src="img/coffee.png" class="roundguy" style="background-color: #1c1d1f; padding: 5px;" />
+                        <ul class="ch-grid">
+                            <li>
+                                <div class="ch-item ch-img-1"></div>
+                            </li>
+                        </ul>
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="card-content-inner">
+                                    <form id="frmSignIn">
+                                        <div class="list-block">
+                                            <ul style="margin-top: -25px;">
+                                                <li>
+                                                    <div class="bg-green" style="border-radius: 10px; text-align: center; padding: 5px;">
+                                                        <span style="color: #000; font-family: 'Sacramento'; font-size: 32px; font-weight: bold;">
+                                                            OrderApp
+                                                        </span>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="item-content" style="margin-top: 5px;">
+                                                        <div class="item-media"><i class="icon f7-icons">person</i></div>
+                                                        <div class="item-inner">
+                                                            <div class="item-input">
+                                                                <input type="email" name="email" id="email" required placeholder="Your Email" value="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <div class="item-content" style="margin-bottom: -15px;">
+                                                        <div class="item-media"><i class="icon f7-icons">lock_fill</i></div>
+                                                        <div class="item-inner">
+                                                            <div class="item-input">
+                                                                <input type="password" name="password" id="password" required placeholder="Your password" value="">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
-                        <form id="frmSignIn">
+                        <div class="content-block" style="padding-left: 10px; padding-right: 10px;">
                             <div class="list-block">
                                 <ul>
-                                    <li class="item-content">
-                                        <div class="item-inner">
-                                            <div class="item-title label"><i class="f7-icons">person</i></div>
-                                            <div class="item-input">
-                                                <input type="email" name="email" id="email" required placeholder="Your Email" value="">
-                                            </div>
-                                        </div>
+                                    <li style="padding: 5px;">
+                                        <a href="#" id="btnSignIn" class="button button-fill button-big">Sign In</a>
                                     </li>
-                                    <li class="item-content">
-                                        <div class="item-inner">
-                                            <div class="item-title label"><u class="f7-icons">lock_fill</u></div>
-                                            <div class="item-input">
-                                                <input type="password" name="password" id="password" required placeholder="Your password" value="">
-                                            </div>
-                                        </div>
+                                    <li style="padding: 5px;">
+                                        <a href="#" id="btnSignUp" class="button">Sign Up</a>
                                     </li>
                                 </ul>
                             </div>
-                            <div class="list-block">
-                                <ul>
-                                    <li><a href="#" class="item-link list-button btnSignIn">Sign In</a></li>
-                                    <li><a href="#" class="item-link list-button btnSignUp">Sign Up</a></li>
-                                </ul>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -133,7 +157,7 @@
                         </a>
                     </div>
                     <div class="col-50" style="text-align:right">
-                        <a href="#" onclick="logout()"><i title="Logout" alt="Logout" class="f7-icons">logout</i></a>
+                        <a href="#" onclick="logout()"><i class="fa fa-power-off fa-2x" aria-hidden="true"></i></a>
                     </div>
                 </div>
                 <h2>{{name.firstname}} {{name.lastname}}</h2>

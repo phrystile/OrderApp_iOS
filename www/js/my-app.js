@@ -123,7 +123,7 @@ $$('.btnLogin').on('click', function() {
 	myApp.loginScreen(); 
 });
 
-$$('.btnSignIn').on('click', function() {
+$$('#btnSignIn').on('click', function() {
 	if (!$$('#frmSignIn')[0].checkValidity()) { 
 		myApp.alert('Email or Password was invalid/empty, try again!', 'Oops');
 		return false;
@@ -166,7 +166,7 @@ $$('.btnSignIn').on('click', function() {
 	);
 });
 
-$$('.btnSignUp').on('click', function() {
+$$('#btnSignUp').on('click', function() {
     if (!$$('#frmSignIn')[0].checkValidity()) { 
 		myApp.alert('Email or Password was invalid, try again!', 'Oops');
 		return false;
